@@ -1,36 +1,16 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useTranslation } from "@/lib/i18n";
-import { Link, useLocation } from "wouter";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function Header() {
-  const { t, language, setLanguage } = useTranslation();
-  const [location] = useLocation();
-
   return (
-    <header className="bg-white shadow-sm border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <Link href="/">
-                <a className="text-2xl font-bold text-primary hover:text-primary/90 transition-colors">
-                  {t('header.title')}
-                </a>
-              </Link>
-            </div>
+    <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:pl-80">
+      <div className="container flex h-16 items-center pl-16 lg:pl-4">
+        <div className="flex flex-1 items-center justify-between space-x-2">
+          <div className="w-full flex-1">
+            {/* Page content will determine the header content */}
           </div>
-          
-          <div className="flex items-center space-x-4">
-            <Select value={language} onValueChange={(value: 'en' | 'tr') => setLanguage(value)}>
-              <SelectTrigger className="w-32" data-testid="language-select">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en" data-testid="language-en">English</SelectItem>
-                <SelectItem value="tr" data-testid="language-tr">Türkçe</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <nav className="flex items-center">
+            <ThemeToggle />
+          </nav>
         </div>
       </div>
     </header>

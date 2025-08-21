@@ -1,26 +1,34 @@
-# DocCraft - PDF Processing Web Application
+# File Converter - Document Processing Web Application
 
 ## Overview
-DocCraft is an iLovePDF-style web application that provides professional PDF processing tools. Built as a full-stack TypeScript application, it offers core functionalities including PDF merging, splitting, compression, image-to-PDF conversion, PDF-to-image conversion, and page reordering. The application emphasizes security, privacy, and user experience with a modern, accessible interface.
+File Converter is a comprehensive document manipulation web application that provides professional PDF processing tools and Office document conversion capabilities. Built as a full-stack TypeScript application, it offers core functionalities including PDF merging, splitting, compression, image-to-PDF conversion, PDF-to-image conversion, page reordering, and document format conversions (Word, Excel, CSV). The application emphasizes security, privacy, and user experience with a modern, accessible sidebar-based interface and dark/light mode support.
 
 ## User Preferences
-Preferred communication style: Simple, everyday language.
+- Preferred communication style: Simple, everyday language
+- Application name: File Converter 
+- Developer attribution: Ahmet Sağdaşlı with GitHub (https://github.com/ahmetsagdasli) and LinkedIn (https://www.linkedin.com/in/ahmet-sagdasli/) links
+- Language: English-only (no Turkish translations)
+- UI: Modern sidebar navigation with dark/light mode toggle
+- No references to development platform in final application
 
 ## System Architecture
 
 ### Frontend Architecture
 - **Framework**: React 18 with TypeScript and Vite for development tooling
 - **UI Library**: Radix UI components with shadcn/ui design system
-- **Styling**: Tailwind CSS with custom CSS variables for theming
+- **Styling**: Tailwind CSS with custom CSS variables for theming and dark/light mode support
+- **Layout**: Modern sidebar-based navigation with responsive mobile design
+- **Theme System**: Context-based theme provider with system preference detection and localStorage persistence
 - **Routing**: Wouter for client-side navigation
 - **State Management**: TanStack Query for server state and React hooks for local state
-- **Internationalization**: Custom i18n implementation supporting English and Turkish
+- **Internationalization**: Simplified English-only translation system
 - **File Handling**: Custom file upload components with drag-and-drop support
 
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js framework
 - **Database**: PostgreSQL with Drizzle ORM for schema management
-- **File Processing**: PDF-lib for PDF manipulation, Sharp for image processing
+- **File Processing**: PDF-lib for PDF manipulation, Sharp for image processing, mammoth for Word processing, xlsx for Excel/CSV operations
+- **Document Services**: Comprehensive documentService with support for Word↔Excel, Document→PDF, Excel↔CSV conversions
 - **File Upload**: Multer middleware with file type validation and size limits
 - **Rate Limiting**: In-memory request tracking with configurable limits
 - **Error Handling**: Centralized error middleware with structured responses
