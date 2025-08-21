@@ -1,6 +1,13 @@
-node_modules
-dist
-.DS_Store
-server/public
-vite.config.ts.*
-*.tar.gz
+﻿# Node / TS / Build
+node_modules/
+dist/
+build/
+.next/
+out/
+*.log
+
+# Env & local
+.env
+.env.*
+.vscode/
+.local/
