@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { PDFService } from "./services/pdfService";
+import { DocumentService } from "./services/documentService";
 import { z } from "zod";
 import {
   mergeSchema,
@@ -10,6 +11,11 @@ import {
   imageToPdfSchema,
   pdfToImageSchema,
   reorderSchema,
+  wordToExcelSchema,
+  excelToWordSchema,
+  docToPdfSchema,
+  excelToCsvSchema,
+  csvToExcelSchema,
 } from "@shared/schema";
 import multer from 'multer';
 import path from 'path';
@@ -24,7 +30,7 @@ const upload = multer({
     files: 10
   },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['.pdf', '.png', '.jpg', '.jpeg'];
+    const allowedTypes = ['.pdf', '.png', '.jpg', '.jpeg', '.doc', '.docx', '.xls', '.xlsx', '.csv'];
     const ext = path.extname(file.originalname).toLowerCase();
     if (allowedTypes.includes(ext)) {
       cb(null, true);
@@ -35,6 +41,7 @@ const upload = multer({
 });
 
 const pdfService = new PDFService();
+const documentService = new DocumentService();
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Rate limiting middleware (simplified)
@@ -465,6 +472,236 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Download error:", error);
       res.status(500).json({ error: "Failed to download file" });
+    }
+  });
+
+  // Word to Excel conversion endpoint
+  app.post("/api/word-to-excel", async (req, res) => {
+    try {
+      const validatedData = wordToExcelSchema.parse(req.body);
+      
+      const inputPath = path.join(process.cwd(), 'temp/uploads', validatedData.file);
+      
+      try {
+        await fs.access(inputPath);
+      } catch {
+        return res.status(400).json({ error: "Input file not found" });
+      }
+      
+      const outputPath = await documentService.convertWordToExcel(inputPath);
+      const stats = await fs.stat(outputPath);
+      
+      const processedFile = await storage.createProcessedFile({
+        originalName: path.basename(validatedData.file),
+        processedName: validatedData.filename || 'converted_document.xlsx',
+        fileSize: stats.size,
+        operation: 'word-to-excel',
+        status: 'completed',
+        downloadUrl: `/api/download/${path.basename(outputPath)}`,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        metadata: { conversionType: 'word-to-excel' },
+      });
+      
+      res.json({
+        id: processedFile.id,
+        filename: processedFile.processedName,
+        size: processedFile.fileSize,
+        downloadUrl: processedFile.downloadUrl,
+        expiresAt: processedFile.expiresAt,
+      });
+      
+      await documentService.cleanupFile(inputPath);
+      
+    } catch (error) {
+      console.error("Word to Excel error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to convert Word to Excel" });
+    }
+  });
+
+  // Excel to Word conversion endpoint
+  app.post("/api/excel-to-word", async (req, res) => {
+    try {
+      const validatedData = excelToWordSchema.parse(req.body);
+      
+      const inputPath = path.join(process.cwd(), 'temp/uploads', validatedData.file);
+      
+      try {
+        await fs.access(inputPath);
+      } catch {
+        return res.status(400).json({ error: "Input file not found" });
+      }
+      
+      const outputPath = await documentService.convertExcelToWord(inputPath);
+      const stats = await fs.stat(outputPath);
+      
+      const processedFile = await storage.createProcessedFile({
+        originalName: path.basename(validatedData.file),
+        processedName: validatedData.filename || 'converted_document.html',
+        fileSize: stats.size,
+        operation: 'excel-to-word',
+        status: 'completed',
+        downloadUrl: `/api/download/${path.basename(outputPath)}`,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        metadata: { conversionType: 'excel-to-word' },
+      });
+      
+      res.json({
+        id: processedFile.id,
+        filename: processedFile.processedName,
+        size: processedFile.fileSize,
+        downloadUrl: processedFile.downloadUrl,
+        expiresAt: processedFile.expiresAt,
+      });
+      
+      await documentService.cleanupFile(inputPath);
+      
+    } catch (error) {
+      console.error("Excel to Word error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to convert Excel to Word" });
+    }
+  });
+
+  // Document to PDF conversion endpoint
+  app.post("/api/doc-to-pdf", async (req, res) => {
+    try {
+      const validatedData = docToPdfSchema.parse(req.body);
+      
+      const inputPath = path.join(process.cwd(), 'temp/uploads', validatedData.file);
+      
+      try {
+        await fs.access(inputPath);
+      } catch {
+        return res.status(400).json({ error: "Input file not found" });
+      }
+      
+      const outputPath = await documentService.convertDocToPdf(inputPath);
+      const stats = await fs.stat(outputPath);
+      
+      const processedFile = await storage.createProcessedFile({
+        originalName: path.basename(validatedData.file),
+        processedName: validatedData.filename || 'converted_document.html',
+        fileSize: stats.size,
+        operation: 'doc-to-pdf',
+        status: 'completed',
+        downloadUrl: `/api/download/${path.basename(outputPath)}`,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        metadata: { conversionType: 'doc-to-pdf' },
+      });
+      
+      res.json({
+        id: processedFile.id,
+        filename: processedFile.processedName,
+        size: processedFile.fileSize,
+        downloadUrl: processedFile.downloadUrl,
+        expiresAt: processedFile.expiresAt,
+      });
+      
+      await documentService.cleanupFile(inputPath);
+      
+    } catch (error) {
+      console.error("Document to PDF error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to convert document to PDF" });
+    }
+  });
+
+  // Excel to CSV conversion endpoint
+  app.post("/api/excel-to-csv", async (req, res) => {
+    try {
+      const validatedData = excelToCsvSchema.parse(req.body);
+      
+      const inputPath = path.join(process.cwd(), 'temp/uploads', validatedData.file);
+      
+      try {
+        await fs.access(inputPath);
+      } catch {
+        return res.status(400).json({ error: "Input file not found" });
+      }
+      
+      const outputPath = await documentService.convertExcelToCsv(inputPath);
+      const stats = await fs.stat(outputPath);
+      
+      const processedFile = await storage.createProcessedFile({
+        originalName: path.basename(validatedData.file),
+        processedName: validatedData.filename || 'converted_data.csv',
+        fileSize: stats.size,
+        operation: 'excel-to-csv',
+        status: 'completed',
+        downloadUrl: `/api/download/${path.basename(outputPath)}`,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        metadata: { conversionType: 'excel-to-csv' },
+      });
+      
+      res.json({
+        id: processedFile.id,
+        filename: processedFile.processedName,
+        size: processedFile.fileSize,
+        downloadUrl: processedFile.downloadUrl,
+        expiresAt: processedFile.expiresAt,
+      });
+      
+      await documentService.cleanupFile(inputPath);
+      
+    } catch (error) {
+      console.error("Excel to CSV error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to convert Excel to CSV" });
+    }
+  });
+
+  // CSV to Excel conversion endpoint
+  app.post("/api/csv-to-excel", async (req, res) => {
+    try {
+      const validatedData = csvToExcelSchema.parse(req.body);
+      
+      const inputPath = path.join(process.cwd(), 'temp/uploads', validatedData.file);
+      
+      try {
+        await fs.access(inputPath);
+      } catch {
+        return res.status(400).json({ error: "Input file not found" });
+      }
+      
+      const outputPath = await documentService.convertCsvToExcel(inputPath);
+      const stats = await fs.stat(outputPath);
+      
+      const processedFile = await storage.createProcessedFile({
+        originalName: path.basename(validatedData.file),
+        processedName: validatedData.filename || 'converted_data.xlsx',
+        fileSize: stats.size,
+        operation: 'csv-to-excel',
+        status: 'completed',
+        downloadUrl: `/api/download/${path.basename(outputPath)}`,
+        expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+        metadata: { conversionType: 'csv-to-excel' },
+      });
+      
+      res.json({
+        id: processedFile.id,
+        filename: processedFile.processedName,
+        size: processedFile.fileSize,
+        downloadUrl: processedFile.downloadUrl,
+        expiresAt: processedFile.expiresAt,
+      });
+      
+      await documentService.cleanupFile(inputPath);
+      
+    } catch (error) {
+      console.error("CSV to Excel error:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: "Invalid request data", details: error.errors });
+      }
+      res.status(500).json({ error: "Failed to convert CSV to Excel" });
     }
   });
 

@@ -75,9 +75,40 @@ export const reorderSchema = z.object({
   filename: z.string().optional(),
 });
 
+// Document conversion schemas
+export const wordToExcelSchema = z.object({
+  file: z.string(),
+  filename: z.string().optional(),
+});
+
+export const excelToWordSchema = z.object({
+  file: z.string(),
+  filename: z.string().optional(),
+});
+
+export const docToPdfSchema = z.object({
+  file: z.string(),
+  filename: z.string().optional(),
+});
+
+export const excelToCsvSchema = z.object({
+  file: z.string(),
+  filename: z.string().optional(),
+});
+
+export const csvToExcelSchema = z.object({
+  file: z.string(),
+  filename: z.string().optional(),
+});
+
 export type MergeRequest = z.infer<typeof mergeSchema>;
 export type SplitRequest = z.infer<typeof splitSchema>;
 export type CompressRequest = z.infer<typeof compressSchema>;
 export type ImageToPdfRequest = z.infer<typeof imageToPdfSchema>;
 export type PdfToImageRequest = z.infer<typeof pdfToImageSchema>;
 export type ReorderRequest = z.infer<typeof reorderSchema>;
+export type WordToExcelRequest = z.infer<typeof wordToExcelSchema>;
+export type ExcelToWordRequest = z.infer<typeof excelToWordSchema>;
+export type DocToPdfRequest = z.infer<typeof docToPdfSchema>;
+export type ExcelToCsvRequest = z.infer<typeof excelToCsvSchema>;
+export type CsvToExcelRequest = z.infer<typeof csvToExcelSchema>;

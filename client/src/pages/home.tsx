@@ -10,6 +10,9 @@ import {
   Image, 
   Images, 
   RotateCw,
+  FileSpreadsheet,
+  FileEdit,
+  RefreshCw,
   Shield,
   Zap,
   Award,
@@ -64,6 +67,30 @@ const tools = [
     color: 'bg-indigo-100 text-indigo-600',
     titleKey: 'tools.reorder.title',
     descriptionKey: 'tools.reorder.description'
+  },
+  {
+    id: 'word-excel',
+    path: '/word-excel',
+    icon: FileSpreadsheet,
+    color: 'bg-blue-100 text-blue-600',
+    titleKey: 'tools.wordExcel.title',
+    descriptionKey: 'tools.wordExcel.description'
+  },
+  {
+    id: 'doc-convert',
+    path: '/doc-convert',
+    icon: FileEdit,
+    color: 'bg-teal-100 text-teal-600',
+    titleKey: 'tools.docConvert.title',
+    descriptionKey: 'tools.docConvert.description'
+  },
+  {
+    id: 'excel-csv',
+    path: '/excel-csv',
+    icon: RefreshCw,
+    color: 'bg-pink-100 text-pink-600',
+    titleKey: 'tools.excelCsv.title',
+    descriptionKey: 'tools.excelCsv.description'
   }
 ];
 

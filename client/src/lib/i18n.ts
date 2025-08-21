@@ -73,6 +73,30 @@ const translations: Translations = {
     en: 'Reorder, rotate, or delete pages from your PDF documents with an intuitive drag-and-drop interface.',
     tr: 'PDF belgelerinizdeki sayfaları sezgisel sürükle-bırak arayüzü ile yeniden sıralayın, döndürün veya silin.'
   },
+  'tools.wordExcel.title': {
+    en: 'Word ↔ Excel',
+    tr: 'Word ↔ Excel'
+  },
+  'tools.wordExcel.description': {
+    en: 'Convert between Word documents and Excel spreadsheets with preserved formatting and data structure.',
+    tr: 'Word belgeleri ve Excel elektronik tablolarını biçimlendirme ve veri yapısını koruyarak dönüştürün.'
+  },
+  'tools.docConvert.title': {
+    en: 'Document to PDF',
+    tr: 'Belgeyi PDF\'e'
+  },
+  'tools.docConvert.description': {
+    en: 'Convert Word documents to PDF format while maintaining layout and formatting integrity.',
+    tr: 'Word belgelerini düzen ve biçimlendirme bütünlüğünü koruyarak PDF formatına dönüştürün.'
+  },
+  'tools.excelCsv.title': {
+    en: 'Excel ↔ CSV',
+    tr: 'Excel ↔ CSV'
+  },
+  'tools.excelCsv.description': {
+    en: 'Convert between Excel spreadsheets and CSV files for data interchange and compatibility.',
+    tr: 'Veri alışverişi ve uyumluluk için Excel elektronik tabloları ve CSV dosyalarını dönüştürün.'
+  },
   
   // Features
   'features.title': {

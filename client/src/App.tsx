@@ -10,6 +10,9 @@ import Compress from "@/pages/compress";
 import ImageToPdf from "@/pages/image-to-pdf";
 import PdfToImage from "@/pages/pdf-to-image";
 import Reorder from "@/pages/reorder";
+import WordExcel from "@/pages/word-excel";
+import DocConvert from "@/pages/doc-convert";
+import ExcelCsv from "@/pages/excel-csv";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -22,6 +25,9 @@ function Router() {
       <Route path="/image-to-pdf" component={ImageToPdf} />
       <Route path="/pdf-to-image" component={PdfToImage} />
       <Route path="/reorder" component={Reorder} />
+      <Route path="/word-excel" component={WordExcel} />
+      <Route path="/doc-convert" component={DocConvert} />
+      <Route path="/excel-csv" component={ExcelCsv} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -7,6 +7,11 @@ import type {
   PdfToImageOptions,
   ReorderOptions,
   ProcessedFile,
+  WordToExcelOptions,
+  ExcelToWordOptions,
+  DocToPdfOptions,
+  ExcelToCsvOptions,
+  CsvToExcelOptions,
 } from "../types";
 
 export const api = {
@@ -80,6 +85,47 @@ export const api = {
       newOrder: options.newOrder,
       rotations: options.rotations,
       deletions: options.deletions,
+      filename: options.filename,
+    });
+    return response.json();
+  },
+
+  // Document conversion operations
+  convertWordToExcel: async (options: WordToExcelOptions): Promise<ProcessedFile> => {
+    const response = await apiRequest("POST", "/api/word-to-excel", {
+      file: options.file,
+      filename: options.filename,
+    });
+    return response.json();
+  },
+
+  convertExcelToWord: async (options: ExcelToWordOptions): Promise<ProcessedFile> => {
+    const response = await apiRequest("POST", "/api/excel-to-word", {
+      file: options.file,
+      filename: options.filename,
+    });
+    return response.json();
+  },
+
+  convertDocToPdf: async (options: DocToPdfOptions): Promise<ProcessedFile> => {
+    const response = await apiRequest("POST", "/api/doc-to-pdf", {
+      file: options.file,
+      filename: options.filename,
+    });
+    return response.json();
+  },
+
+  convertExcelToCsv: async (options: ExcelToCsvOptions): Promise<ProcessedFile> => {
+    const response = await apiRequest("POST", "/api/excel-to-csv", {
+      file: options.file,
+      filename: options.filename,
+    });
+    return response.json();
+  },
+
+  convertCsvToExcel: async (options: CsvToExcelOptions): Promise<ProcessedFile> => {
+    const response = await apiRequest("POST", "/api/csv-to-excel", {
+      file: options.file,
       filename: options.filename,
     });
     return response.json();

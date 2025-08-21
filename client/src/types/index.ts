@@ -65,3 +65,28 @@ export interface ReorderOptions {
   deletions?: number[];
   filename?: string;
 }
+
+export interface WordToExcelOptions {
+  file: string;
+  filename?: string;
+}
+
+export interface ExcelToWordOptions {
+  file: string;
+  filename?: string;
+}
+
+export interface DocToPdfOptions {
+  file: string;
+  filename?: string;
+}
+
+export interface ExcelToCsvOptions {
+  file: string;
+  filename?: string;
+}
+
+export interface CsvToExcelOptions {
+  file: string;
+  filename?: string;
+}
